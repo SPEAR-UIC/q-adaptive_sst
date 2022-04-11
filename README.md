@@ -6,27 +6,23 @@
 Visit [sst-simulator.org](http://sst-simulator.org) to learn more about SST.
 
 ---
-## Q-adaptive routing
+## Study of Workload Interference with Intelligent Routing on Dragonfly
 
-The current master branch has the implementation of Q-adatpive routing in sst-elements/merlin Dragonfly topology.
-
-Note: if you use this SST implementation, please cite the following paper:
-
-Yao Kang, Xin Wang, and Zhiling Lan. "Q-adaptive: A Multi-Agent Reinforcement Learning Based Routing on Dragonfly Network". In Proceedings of the 30th International Symposium on High-Performance Parallel and Distributed Computing (HPDC ’21).
+The submodules of sst-core and sst-elements contain the toolkit enhancement for Dragonfly network interference study.
 
 ### Installation 
 1. Download sst-core and sst-elements from this repository, use other SST versions may cause compatible issue.  
 ```bash
 git clone --recurse-submodules https://github.com/SPEAR-IIT/q-adaptive_sst.git
+git checkout df_interference_rl
 ```
 
-2. Follow [installation guide](http://sst-simulator.org/SSTPages/SSTBuildAndInstall10dot1dot0SeriesDetailedBuildInstructions/) to install SST.
+2. Follow [installation guide](http://sst-simulator.org/SSTPages/SSTBuildAndInstall_11dot1dot0_SeriesDetailedBuildInstructions/) to install SST.
 
 ### Run a test
 
-```bash
-mpirun -np 4 sst q-adaptive_sst/sst-elements/tests/dragonfly_q-adaptive.py 
-```
+check https://github.com/SPEAR-IIT/sst-elements/tree/df_interference_rl for more detail
+
 ---
 
 
