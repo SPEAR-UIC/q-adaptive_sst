@@ -1,6 +1,6 @@
 [submodule "sst-core"]
 	path = sst-core
-	url = git@github.com:SPEAR-IIT/sst-core.git
+	url = https://github.com/SPEAR-IIT/sst-core.git
 [submodule "sst-elements"]
 	path = sst-elements
-	url = git@github.com:SPEAR-IIT/sst-elements.git
+	url = https://github.com/SPEAR-IIT/sst-elements.git
