@@ -23,6 +23,15 @@ git checkout df_interference_rl
 
 check https://github.com/SPEAR-IIT/sst-elements/tree/df_interference_rl for more detail
 
+
+### Precompiled container
+Please check the package under this repo for a precompiled docker image,
+or pull the container directly
+```bash
+docker pull ghcr.io/spear-iit/sst_q-adaptive:df_interference_rl
+```
+
+
 ---
 
 
