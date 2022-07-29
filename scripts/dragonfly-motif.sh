@@ -19,15 +19,18 @@ export PATH=$SST_INSTALL/sst-core/bin:$PATH
 export PATH=$SST_INSTALL/sst-elements/bin:$PATH
 export LD_LIBRARY_PATH=$SST_INSTALL/sst-elements/lib:$LD_LIBRARY_PATH
 
-CONFIG_DIR=/home/df_user/scripts/config
+ROOT_DIR=$(dirname $(readlink -f $0))  
+
+CONFIG_DIR=$ROOT_DIR/config
 
 export PYTHONPATH=${CONFIG_DIR}
 export PYTHONPATH=$HOME/sst/src/sst-elements/src/sst/elements/ember/test:${PYTHONPATH}
+export PYTHONPATH=$ROOT_DIR/../sst-elements/src/sst/elements/ember/test:${PYTHONPATH}
 
 cwd=$(pwd)
 echo "curr dir is ${cwd}"
 
-ROOT_DIR=$(dirname $(readlink -f $0))  
+
 
 mkload=${ROOT_DIR}/mkload.sh
 PLATFORM="platform_df1056"     ## __import__() this file
@@ -151,7 +154,7 @@ for rting in "${rtings[@]}"; do
 
                 echo "Motifs passed to mkload: ${ember_motif[@]}"
             
-                if (${mkload} ${LOADFILE} "${ember_motif[@]}" "${motif_nnum}"); then
+                if (${mkload} ${ROOT_DIR} ${LOADFILE} "${ember_motif[@]}" "${motif_nnum}"); then
                     echo
                     echo "start job in ${work_dir}"
                     date

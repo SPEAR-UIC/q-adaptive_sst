@@ -18,7 +18,7 @@ from df_utils import *
 # which sim case to plot
 motif_flds_cases = [
     [cosmoflow, null],
-    [cosmoflow, random],
+    # [cosmoflow, random],
 ]
 
 ## which app to plot defined in motif_flds_cases, e,g the first app w/ idx==0
@@ -187,6 +187,11 @@ fig, ax_to_plt = plt.subplots()
 
 ax_to_plt = axpltvstime( ax_to_plt, idx_smooth, bw_smooth, cases_names, list(range(len(cases_names))), 0) 
 ax_to_plt.set_ylabel('Throughput (GB/ms)', labelpad=0)
+## convert us to ms x-axis
+us_ticks = ax_to_plt.get_xticks()[::2] 
+ax_to_plt.set_xticks( us_ticks )
+ax_to_plt.set_xticklabels( [ str(us//1000) for us in us_ticks  ]  )
+ax_to_plt.set_xlabel('time (ms)', labelpad=0)
 
 fig.legend( )
 plt.tight_layout()
@@ -199,6 +204,12 @@ fig, ax_to_plt = plt.subplots()
 
 ax_to_plt = axpltvstime( ax_to_plt, idx_smooth, lat_smooth, cases_names, list(range(len(cases_names))), 0) 
 ax_to_plt.set_ylabel('packet latency (us)', labelpad=0)
+ax_to_plt.set_xlabel('time (ms)', labelpad=0)
+## convert us to ms x-axis
+us_ticks = ax_to_plt.get_xticks()[::2] 
+ax_to_plt.set_xticks( us_ticks )
+ax_to_plt.set_xticklabels( [ str(us//1000) for us in us_ticks  ]  )
+ax_to_plt.set_xlabel('time (ms)', labelpad=0)
 
 fig.legend( )
 plt.tight_layout()

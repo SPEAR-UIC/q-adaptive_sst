@@ -1,6 +1,9 @@
 #!/bin/bash
 
+ROOT_DIR=$1; shift
 load_path=$1; shift
+
+echo "root is ${ROOT_DIR}"
 
 if [[ -f ${load_path} ]]; then
     echo "${load_path} already exist, skipping"
@@ -33,7 +36,7 @@ if (( ${num_motifjob} != ${#motifs_nnum[@]} )); then
     exit 1
 fi 
 
-read -a nidlist_1056 < $HOME/scripts/df1056_random.list
+read -a nidlist_1056 < $ROOT_DIR/df1056_random.list
 
 syssize=${#nidlist_1056[@]}
 if (( syssize != 1056 )); then
