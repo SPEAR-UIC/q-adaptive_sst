@@ -1,5 +1,4 @@
-## plot application's packet latency distribution & througput v.s. time
-## similar to figure 5,6,7,9 in the paper
+## Reproduction of Fig 9 in the paper
 
 import pathlib
 import pandas as pd
@@ -10,42 +9,57 @@ import multiprocessing
 import ujson as json
 import math
 from pathlib import Path
-
 from df_utils import *
 
-## ------------ consider to update ----------------------
+## Where cosmoflow_null, cosmoflow_halo3d ... is stored
+sim_data_dir='/home/ac.kang/q-adaptive_sst/wkdir'
 
-# which sim case to plot
+plt.rcParams.update(
+    {
+    "xtick.labelsize": 8,
+    "ytick.labelsize": 8,
+    "axes.labelsize": 8,
+    'axes.titlesize': 8,
+    }
+)
+
+# width_sc  = 3.337
+width_sc  = 3.336
+height_sc = width_sc / 1.618
+
+# width_dc = 7.006
+width_dc = 7.004
+height_dc = width_dc / 1.618
+
+script_root = os.path.dirname(os.path.realpath(__file__))
+json_dir = Path('./json_res')
+
+fig_root=Path('./fig')
+fig_root.mkdir(parents=True, exist_ok=True)
+json_dir.mkdir(parents=True, exist_ok=True)
+
 motif_flds_cases = [
     [cosmoflow, null],
+    [null, halo3d],
+    [cosmoflow, halo3d],
     [cosmoflow, halo3d],
 ]
 
-## which app to plot defined in motif_flds_cases, e,g the first app w/ idx==0
-target_motif_id_list = [0,0] 
-## which routing algorithm to plot
-rting_list = ['q-adaptive', 'par']
-## where is the simulation folder, expcted format: e.g. sim_data_dir/cosmoflow_null
-sim_data_dir = '/home/ac.kang/q-adaptive_sst/wkdir'
-## where to save the figures
-fig_root = Path('./fig')
-## tmp dir to store parsed data
-json_dir = Path('./json_res')
-## ------------------------------------------------------
+nodecnt_list = ['528','528']
+target_motif_id_list = [0,1,0,1]
 
+rting_list=[
+    'par',
+    'q-adaptive',
+]
 
-script_root = os.path.dirname(os.path.realpath(__file__))
-
-fig_root.mkdir(parents=True, exist_ok=True)
-json_dir.mkdir(parents=True, exist_ok=True)
 emberrandom_subite='1'
-nodecnt_list = ['528', '528']
+
+assert(len(motif_flds_cases) == len(target_motif_id_list))
 
 data_files = []
 study_cases = []
-
 cases_names = []
-
 print(' Plotting for : ')
 
 for target_jid, motif_flds in zip(target_motif_id_list, motif_flds_cases):
@@ -85,7 +99,7 @@ for target_jid, motif_flds in zip(target_motif_id_list, motif_flds_cases):
             data_files.append(df_path)
         else:
             assert(0), print('File not found: ', df_path)
-            
+
 json_p = json_dir / 'tmp.json'
 read_script=os.path.join(script_root, 'parallel_read_linkcontrol.py')
 
@@ -134,86 +148,90 @@ for res_id, res in enumerate(res_list):
     idx_inject_list.append(np.array(res[6]))
     bw_inject_list.append(np.array(res[7]))
 
-percentiles=[95,99]
-p99_list=[]
 
-for label_id, _ in enumerate(res_list):
-    p99_list.append(np.percentile( indi_pkt_lat_list[label_id], percentiles, interpolation='lower')) 
+label_name = [
+    'cosmoflow_alone_par',
+    'cosmoflow_alone_q',
+    'halo3d_alone_par',
+    'halo3d_alone_q',
+    
+    'cosmoflow_interfer_par',
+    'cosmoflow_interfer_q',
+    
+    'halo3d_interfer_par',
+    'halo3d_interfer_q',
+]
 
-print( 'plotting latency distribution boxplot')
-
-fig=plt.figure()
-xtickpos = range(1, len(cases_names)+1)
-xticklabel = cases_names
-bxpltsdit = plt.boxplot(
-    indi_pkt_lat_list, 
-    labels=cases_names,
-    positions=xtickpos,
-    showfliers = False,
-    showmeans = True,
-    widths = 0.5,
-    )
-
-for ppid, pnum in enumerate(percentiles):
-    plt.scatter(xtickpos, [ ptiles[ppid] for ptiles in p99_list ], label=f'p{pnum}')
-
-leghandles, leglabels = plt.gca().get_legend_handles_labels()
-plt.legend([leghandles[1], leghandles[0], bxpltsdit['means'][0]], 
-           ['p99', 'p95', 'mean'],
-           loc='lower left',
-           fontsize=8
-          )
-plt.grid()
-plt.ylabel('Packet latency (us)')
-plt.xticks(rotation = -20)
-
-plt.yscale('log', base=10)
-figname = fig_root / 'lat_boxplot'
-
-plt.tight_layout()
-fig.savefig(figname)
-
-print(f'Latency boxplot saved to {figname}.png' )
-
-
-print( 'plotting application throughput vs time plot')
+## pad zero since Cosmoflow network activity starts from around 5500 us
+cosmo_pos = [0,1,4,5]
+for cos in cosmo_pos:
+    idx_list[cos] = np.concatenate( [list(range(0,5500,100)) , idx_list[cos] ] )
+    bw_list[cos] = np.concatenate( [ [0]*len(list(range(0,5500,100))) , bw_list[cos] ] )
 
 smooth_factor = 10
 lat_smooth = [ get_smooth_line(latline, smooth_factor) for latline in lat_list  ]
 bw_smooth = [ get_smooth_line(bwline, smooth_factor) for bwline in bw_list  ]
 idx_smooth = [ idx[::smooth_factor] for idx in idx_list  ]
 
-fig, ax_to_plt = plt.subplots()
+## bwonly
+figname = fig_root / 'Figure9'
 
-ax_to_plt = axpltvstime( ax_to_plt, idx_smooth, bw_smooth, cases_names, list(range(len(cases_names))), 0) 
-ax_to_plt.set_ylabel('Throughput (GB/ms)', labelpad=0)
-## convert us to ms x-axis
-us_ticks = ax_to_plt.get_xticks()[::2] 
-ax_to_plt.set_xticks( us_ticks )
-ax_to_plt.set_xticklabels( [ str(us//1000) for us in us_ticks  ]  )
-ax_to_plt.set_xlabel('time (ms)', labelpad=0)
+figuresize = (width_dc, width_dc/3.3)
+fig= plt.figure(figsize=figuresize)
 
-fig.legend( )
-plt.tight_layout()
-figname = fig_root / 'app_bw_vs_time'
+subpltsarray=(1,2)
+ax = [
+    plt.subplot2grid(subpltsarray, (0, 0), colspan=1, rowspan=1), 
+    plt.subplot2grid(subpltsarray, (0, 1), colspan=1, rowspan=1),
+]
+
+plot_datafile_idxs = [
+    [0,2,4,6],
+    [1,3,5,7]
+]
+
+linewidth=1
+plt_params_alone={
+    'linewidth': linewidth,
+}
+
+plt_params_interfer={
+    'linewidth': linewidth,
+    'linestyle': '--',
+}
+
+params_list = [plt_params_alone,plt_params_alone,plt_params_interfer,plt_params_interfer]
+
+ax[0] = axpltvstime( ax[0], idx_smooth, bw_smooth, label_name, plot_datafile_idxs[0], 0, params_list) 
+ax[1] = axpltvstime( ax[1], idx_smooth, bw_smooth, label_name, plot_datafile_idxs[1], 0, params_list) 
+
+
+for axs in [ax[0], ax[1]]:
+    axs.set_ylim((-0.5,5.5))
+
+ax[0].set_xticks( [0,5000,10000,15000], ['0', '5', '10', '15'] )
+ax[1].set_xticks( [0,5000,10000,15000], ['0', '5', '10', '15',] )
+
+ax[0].set_xlabel('time (ms)\n(a)', labelpad=0)
+ax[1].set_xlabel('time (ms)\n(b)', labelpad=0)
+
+ax[0].set_title('PAR', pad=0)
+ax[1].set_title('Q-adp', pad=0)
+
+ax[0].set_ylabel('Throughput (GB/ms)', labelpad=0)
+
+leghandles, leglabels = ax[0].get_legend_handles_labels()
+leglabels_formal = ['CosmoFlow_alone', 'Halo3D_alone', 'CosmoFlow_interfered', 'Halo3D_interfered' ]
+assert(len(leglabels_formal) == len(leghandles))
+fig.legend(leghandles, leglabels_formal, 
+           bbox_to_anchor=(0.05, 0.9, 0.935, .9), loc=3,
+           borderaxespad=0.,
+           ncol=len(leghandles),
+           mode="expand",
+           fontsize=8
+          )
+
+
+fig.subplots_adjust(left=0.05, right=0.985, bottom=0.21, top=0.84, wspace=0.15, hspace=0.38)
+print(figname)
 fig.savefig(figname)
-print( f'figure saved as {figname}.png ')
-
-print( 'plotting application packet latency vs time plot')
-fig, ax_to_plt = plt.subplots()
-
-ax_to_plt = axpltvstime( ax_to_plt, idx_smooth, lat_smooth, cases_names, list(range(len(cases_names))), 0) 
-ax_to_plt.set_ylabel('packet latency (us)', labelpad=0)
-ax_to_plt.set_xlabel('time (ms)', labelpad=0)
-## convert us to ms x-axis
-us_ticks = ax_to_plt.get_xticks()[::2] 
-ax_to_plt.set_xticks( us_ticks )
-ax_to_plt.set_xticklabels( [ str(us//1000) for us in us_ticks  ]  )
-ax_to_plt.set_xlabel('time (ms)', labelpad=0)
-
-fig.legend( )
-plt.tight_layout()
-figname = fig_root / 'app_latency_vs_time'
-fig.savefig(figname)
-print( f'figure saved as {figname}.png ')
-

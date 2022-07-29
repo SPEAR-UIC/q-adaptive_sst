@@ -13,7 +13,7 @@ HOME = os.path.expanduser("~")
 from df_utils import *
 
 # ------------- Consider to update ----------------------------
-simroot_path = '/home/df_user/mnt/wkdir/fft3d_cosmoflow_lu_random_lqcd_stencil5d/'
+simroot_path = '/gpfs/jlse-fs0/users/ac.kang/wkdir/fft3d_cosmoflow_lu_random_lqcd_stencil5d/'
 rting_cases = [
     'q-adaptive_count_itesx1_node140_138_140_139_256_243_ct__',
     'par_count_itesx1_node140_138_140_139_256_243_ct__',

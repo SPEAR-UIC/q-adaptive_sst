@@ -13,12 +13,10 @@ from df_utils import *
 
 ## ------------ consider to update ----------------------
 target_app = cosmoflow     
-background_apps = [null, 
-                #   random
-                  ]
-rting_list = ['q-adaptive']
+background_apps = [null, halo3d]
+rting_list = ['q-adaptive', 'par']
 
-sim_data_dir = '/home/df_user/mnt/wkdir'
+sim_data_dir = '/home/ac.kang/q-adaptive_sst/wkdir'
 fig_root = Path('./fig')
 ## ------------------------------------------------------
 
