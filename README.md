@@ -8,6 +8,8 @@ Visit [sst-simulator.org](http://sst-simulator.org) to learn more about SST.
 ---
 ## Study of Workload Interference with Intelligent Routing on Dragonfly
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6975878.svg)](https://doi.org/10.5281/zenodo.6975878)
+
 The submodules of sst-core and sst-elements contain the toolkit enhancement for Dragonfly network interference study.
 
 ### Installation 
