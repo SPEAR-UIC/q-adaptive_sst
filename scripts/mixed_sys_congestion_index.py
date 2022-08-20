@@ -151,6 +151,7 @@ if len(rting_cases) > 1:
     plt.imshow(congest_idex_list[1] * (-1), interpolation=None, vmin = -0.1, vmax = 0)
     ax.set_title('PAR', pad = 0)
     ax.set_xticks( [0, 10, 20 ,30], ['0', '10', '20', '30'])
+    ax.set_yticks( [32,22,12,2], ['0', '10', '20', '30'])
     ax.set_xlabel('Src. group\n(b)', labelpad=0)
 
 
