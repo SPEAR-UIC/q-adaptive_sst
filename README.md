@@ -14,6 +14,8 @@ Note: if you use this SST implementation, please cite the following paper:
 
 Yao Kang, Xin Wang, and Zhiling Lan. "Q-adaptive: A Multi-Agent Reinforcement Learning Based Routing on Dragonfly Network". In Proceedings of the 30th International Symposium on High-Performance Parallel and Distributed Computing (HPDC ’21).
 
+Y. Kang, X. Wang and Z. Lan, "Study of Workload Interference with Intelligent Routing on Dragonfly," SC22: International Conference for High Performance Computing, Networking, Storage and Analysis, Dallas, TX, USA, 2022,
+
 ### Installation 
 1. Download sst-core and sst-elements from this repository, use other SST versions may cause compatible issue.  
 ```bash
