@@ -2,7 +2,7 @@
 
 # Structural Simulation Toolkit (SST)
 
-#### This repository contains customized [sst-core](https://github.com/SPEAR-IIT/sst-core) and [sst-elements](https://github.com/SPEAR-IIT/sst-elements) forked from [SST Github page](https://github.com/sstsimulator/sst-elements) maintained by [SPEAR group](http://www.cs.iit.edu/~zlan/) at IIT.  
+#### This repository contains customized [sst-core](https://github.com/SPEAR-UIC/sst-core) and [sst-elements](https://github.com/SPEAR-UIC/sst-elements) forked from [SST Github page](https://github.com/sstsimulator/sst-elements) maintained by [SPEAR Lab](The lab moved from Illinois Institute of Technology to University of Illinois Chicago in August 2023. https://spear.lab.uic.edu/)
 Visit [sst-simulator.org](http://sst-simulator.org) to learn more about SST.
 
 ---
@@ -19,7 +19,7 @@ Y. Kang, X. Wang and Z. Lan, "Study of Workload Interference with Intelligent Ro
 ### Installation 
 1. Download sst-core and sst-elements from this repository, use other SST versions may cause compatible issue.  
 ```bash
-git clone --recurse-submodules https://github.com/SPEAR-IIT/q-adaptive_sst.git
+git clone --recurse-submodules https://github.com/SPEAR-UIC/q-adaptive_sst.git
 ```
 
 2. Follow [installation guide](http://sst-simulator.org/SSTPages/SSTBuildAndInstall10dot1dot0SeriesDetailedBuildInstructions/) to install SST.
